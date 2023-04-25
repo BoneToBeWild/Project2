@@ -1,0 +1,4 @@
+install.packages("tensorflow")
+install.packages("keras")
+install.packages("cleverhans")
+install.packages("png")
