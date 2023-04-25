@@ -1,0 +1,27 @@
+#install.packages("imager")
+#install.packages("tidyverse")
+#install.packages("torch")
+#install.packages("torchvision")
+#install.packages("tensorflow")
+install.packages("keras")
+install.packages("reticulate")
+#library(imager)
+#library(tidyverse)
+#library(torch)
+#library(tensorflow)
+#install_tensorflow(extra_packages="pillow")
+#library(torchvision)
+library(keras)
+library(reticulate)
+
+setwd("C:/Purdue/IE 332")
+
+model<-load_model_tf("./dandelion_model")
+image <- image_load(paste("./grass/",i,sep=""),target_size = c(224,224))
+
+
+#source('FGSM.R')
+source('C:/Purdue/IE 332/Project2/BIM.R')
+#source('DF.R')
+#source('PGD.R')
+#source('CW.R')
