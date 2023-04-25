@@ -1,0 +1,11 @@
+# Display the original and adversarial images
+par(mfrow = c(1, 2))
+plot(as.raster(image), main = "Original Image")
+plot(as.raster(adversarial_image), main = "Adversarial Image")
+
+# Test the classifier
+original_pred <- which.max(predict(model, array_reshape(image, c(1, dim(image)))))
+adversarial_pred <- which.max(predict(model, array_reshape(adversarial_image, c(1, dim(adversarial_image)))))
+
+cat("Original Image Prediction:", original_pred, "\n")
+cat("Adversarial Image Prediction:", adversarial_pred, "\n")
