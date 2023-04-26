@@ -5,7 +5,7 @@ library(reticulate)
 library(deeplearning)
 
 # Given trained model
-model = load_model_tf("/home/jupyter/332_data/dandelion_model")
+model <- load_model_tf("/home/jupyter/332_data/dandelion_model")
 
 # Image size
 target_size <- c(224, 224)
