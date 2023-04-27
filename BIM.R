@@ -1,6 +1,16 @@
+#library(imager)
+#library(tidyverse)
+#library(torch)
+#library(tensorflow)
+#install_tensorflow(extra_packages="pillow")
+#library(torchvision)
+#library(keras)
+#library(reticulate)
+
 #convert keras model to torch 
 modelpy <- import("torch")
 model <- keras_to_pytorch(model, modelpy)
+alpha <- budgetRatio
 #convert image to torch
 imageTensor <- torchvision::transforms::ToTensor()(image)
 image <- torch::unsqueeze(image_tensor, 1)
@@ -45,4 +55,3 @@ ensemble <- function(model, image, budget, attacks, weights){
   
   return(advImage)
 }
-
