@@ -102,10 +102,8 @@ The number of successfully deceived photographs at a specific budget level will 
 
 To complete this project, a complete justification of the rationale for selecting each of the five machine learning algorithms will be provided. This justification will also cover how they were trained and how the optimizer allocates the votes. Finally, the justification should explain why such an approach should work. All code, notes, documentation, etc. must be tracked using Git and Github for verification of the effort contributed by each team member. 
 
-\newpage
 \section{Problem Being Addressed}
-The main problem that our team is aiming to address in this project is to train an algorithm that will perform adversarial attacks on a binary image classifier. In order to accomplish this, the team worked on developing five sub-algorithms to independently attempt to deceive the given classifier. Our team decided that we would independently work on completing the sub-algorithms and then shift towards developing the weighted majority classifier.
-The idea was then to place these sub-algorithms within a classifier that would assign weights according to the weighted majority classifier. 
+The main problem that our team is aiming to address in this project is to train an algorithm that will perform adversarial attacks on a binary image classifier. In order to accomplish this, the team worked on developing five sub-algorithms to independently attempt to deceive the given classifier. Our team decided that we would independently work on completing the sub-algorithms and then shift towards developing the weighted majority classifier. We believe that by dividing the labor among the group, each team member would be able to specialize in an algorithm and provide higher quality results. Once weights have been assigned, the highest scoring algorithm would be chosen for use against the model. For a successful algorithm, it is expected that it all images in each respective folder, dandelion and grass, would be returned as the model is structured so that if it is unable to categorize the image correctly with a probability greater than fifty percent.  
 
 
 
