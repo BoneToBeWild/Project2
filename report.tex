@@ -103,8 +103,7 @@ The number of successfully deceived photographs at a specific budget level will 
 To complete this project, a complete justification of the rationale for selecting each of the five machine learning algorithms will be provided. This justification will also cover how they were trained and how the optimizer allocates the votes. Finally, the justification should explain why such an approach should work. All code, notes, documentation, etc. must be tracked using Git and Github for verification of the effort contributed by each team member. 
 
 \section{Problem Being Addressed}
-The main problem that our team is aiming to address in this project is to train an algorithm that will perform adversarial attacks on a binary image classifier. In order to accomplish this, the team worked on developing five sub-algorithms to independently attempt to deceive the given classifier. Our team decided that we would independently work on completing the sub-algorithms and then shift towards developing the weighted majority classifier. We believe that by dividing the labor among the group, each team member would be able to specialize in an algorithm and provide higher quality results. Once weights have been assigned, the highest scoring algorithm would be chosen for use against the model. For a successful algorithm, it is expected that it all images in each respective folder, dandelion and grass, would be returned as the model is structured so that if it is unable to categorize the image correctly with a probability greater than fifty percent.  
-
+The main problem that our team is aiming to address in this project is to train an algorithm that will perform adversarial attacks on a binary image classifier. In order to accomplish this, the team worked on developing five sub-algorithms to independently attempt to deceive the given classifier. Our team decided that we would independently work on completing the sub-algorithms and then shift towards developing the weighted majority classifier. We believe that by dividing the labor among the group, each team member would be able to specialize in an algorithm and provide higher quality results. Once weights have been assigned, the highest scoring algorithm would be chosen for use against the model. For a successful algorithm, it is expected that it all images in each respective folder, dandelion and grass, would be returned as the model is structured so that if it is unable to categorize the image correctly with a probability greater than fifty percent. 
 
 
 \newpage
@@ -125,7 +124,9 @@ We chose the FGSM method because it is fast, computationally efficient, and easy
 The Basic Iterative Method is a technique that is an extension of the FGSM. Instead of taking large steps, the BIM uses smaller steps and iterations to change the image, which results in higher rate of success. BIM is very straightforward and easy to manipulate using the right libraries in r, we can easily change the input values so that the algorithm run faster for perform better. \\
 
 
-\subsection{Deep Fool}
+\subsection{Deep Fool} % WHAT you chose, WHY, EXPECTATIONS for runtime/performance tradeoffs, 
+
+
 \subsection{Carlini-Wagner}
 
 The CW attack algorithm is an optimization-based adversarial attack that generates perturbations in the input data to deceive deep learning models. The algorithm focuses on crafting adversarial examples with minimal perturbation to the original input, making it challenging for humans to perceive the difference between the original and the modified input. The CW attack algorithm is highly effective in fooling various deep learning models, including image classifiers, even when the models implement robust defenses.\\
@@ -136,7 +137,37 @@ The CW attack algorithm operates by solving an optimization problem that seeks t
 
 \subsubsection{Generating Adverserial Image}
 
-Below is the function for generating the adverserial image. \\
+The function "generateadversarialexample" generates adversarial images. The function takes three arguments: the input image, the pixelbudgetratio, and the pre-trained model. The goal of this function is to create an adversarial image that fools the classifier while altering a limited number of pixels according to the specified pixel budget ratio.\\
+
+The entire code can be found in Appendix 8.1.1. In the first line the input image is normalized by dividing its pixel value by 255.Normalizing the image ensures that the pixel values fall within the range [0, 1], which is the standard input format for most deep learning models. Next, the pixel budget is calculated by multiplying the total number of pixels in the image (obtained using prod(dim(image))) with the pixelbudgetratio. The ceiling() function rounds up the result to the nearest integer value, ensuring that the pixel budget is a whole number.\\
+
+The Carlini-Wagner attack using the CarliniWagnerL2-function from the 'cleverhans' library. The function takes several arguments, such as the TensorFlow session (sess), the pre-trained model (model), the number of classes (nbclasses), and various hyperparameters controlling the attack's behavior. The maxperturbations parameter is set to the calculated pixelbudget to limit the number of pixels that can be altered in the image. The adverserial image is generated by calling the attack object as generated. 
+
+\subsubsection{Testing of the Carlini-Wagner algorithim}
+
+ The goal of the script is to see if the generated adverserial image actually fooled the classifier. The entire code can be found in the Appendix section 8.1.2\\
+
+The par(mfrow = c(1, 2)) function call sets up a plotting area with one row and two columns, allowing us to display two images side by side. The two plot functions display the original and adversarial images, respectively, with their corresponding titles. This visual comparison helps us confirm that the adversarial image is very similar to the original image, with only subtle differences introduced by the Carlini-Wagner attack algorithm.\\
+
+To test the classifier, the predict() function is used to obtain the model's output probabilities for each class (X or Y) when presented with the original and adversarial images. The array reshape() function reshapes the images into a format suitable for the classifier. The which.max() function returns the index of the maximum probability, which corresponds to the predicted class.\\
+
+Finally, the cat() function to display the predicted classes for the original and adversarial images. If the Carlini-Wagner attack algorithm is successful, the classifier's prediction for the adversarial image should differ from the original image's prediction, despite the visual similarity between the two images. This outcome demonstrates the algorithm's effectiveness in fooling the image classifier while adhering to the specified pixel budget.\\
+
+\subsection{Projected Gradient Descent}
+
+\newpage
+\section{Correctness of Proofs}
+
+\newpage
+\section{Complexity Analysis}
+
+\clearpage
+\section{Appendix}
+
+\subsection{Carlini-Wagner function}
+\subsubsection{Adverserial Image Generation}
+
+Below is the function that generates adverserial images using the Carlini Wagner method
 
 \begin{lstlisting}[language=R, frame=single]
 generateadversarialexample <- function(image, pixelbudgetratio, model) {
@@ -172,21 +203,7 @@ pixel_budget_ratio <- 0.01  # Adjust this value as needed
 adversarial_image <- generate_adversarial_example(image, pixel_budget_ratio, model)
 \end{lstlisting}
 
-The function "generateadversarialexample" generates adversarial images. The function takes three arguments: the input image, the pixelbudgetratio, and the pre-trained model. The goal of this function is to create an adversarial image that fools the classifier while altering a limited number of pixels according to the specified pixel budget ratio.\\
-
-In the first line the input image is normalized by dividing its pixel value by 255.Normalizing the image ensures that the pixel values fall within the range [0, 1], which is the standard input format for most deep learning models. Next, the pixel budget is calculated by multiplying the total number of pixels in the image (obtained using prod(dim(image))) with the pixelbudgetratio. The ceiling() function rounds up the result to the nearest integer value, ensuring that the pixel budget is a whole number.\\
-
-The Carlini-Wagner attack using the CarliniWagnerL2-function from the 'cleverhans' library. The function takes several arguments, such as the TensorFlow session (sess), the pre-trained model (model), the number of classes (nbclasses), and various hyperparameters controlling the attack's behavior. The maxperturbations parameter is set to the calculated pixelbudget to limit the number of pixels that can be altered in the image. The adverserial image is generated by calling the attack object as generated. 
-
-\subsubsection{Testing of the Carlini-Wagner algorithim}
-
-Below is a script to test the Carlini-Wagner algorithim. The goal is to see if the generated adverserial image actually fooled the classifier. \\
-
-The par(mfrow = c(1, 2)) function call sets up a plotting area with one row and two columns, allowing us to display two images side by side. The two plot functions display the original and adversarial images, respectively, with their corresponding titles. This visual comparison helps us confirm that the adversarial image is very similar to the original image, with only subtle differences introduced by the Carlini-Wagner attack algorithm.\\
-
-To test the classifier, the predict() function is used to obtain the model's output probabilities for each class (X or Y) when presented with the original and adversarial images. The array reshape() function reshapes the images into a format suitable for the classifier. The which.max() function returns the index of the maximum probability, which corresponds to the predicted class.\\
-
-Finally, the cat() function to display the predicted classes for the original and adversarial images. If the Carlini-Wagner attack algorithm is successful, the classifier's prediction for the adversarial image should differ from the original image's prediction, despite the visual similarity between the two images. This outcome demonstrates the algorithm's effectiveness in fooling the image classifier while adhering to the specified pixel budget.\\
+\subsubsection{Testing}
 
 \begin{lstlisting}[language=R, frame=single]
 
@@ -204,21 +221,6 @@ cat("Adversarial Image Prediction:", adversarial_pred, "\n")
 
 \end{lstlisting}
 
-
-\subsection{Projected Gradient Descent}
-
-\newpage
-\section{Correctness of Proofs}
-
-\newpage
-\section{Complexity Analysis}
-
-\clearpage
-\section{References}
-
-\newpage
-\section{Appendix}
-
 \subsection{Testing/Correctness/Verification}
 
 \newpage\subsection{Runtime Complexity and Walltime}
@@ -227,6 +229,14 @@ cat("Adversarial Image Prediction:", adversarial_pred, "\n")
 
 \newpage\subsection{Final Algorithm Selection Justification}
 
-The final algorithim will run through all 5 sub-algorithims (Fast Gradient Sign, Basic Iterative, Deep Fool, Carlini-Wagner, and Projected Gradient) at 5 iterations. For each algorithim a "success index" is made based on .... . The algorithim with the highest success index is the one that will be chosen to run through all the iterations.  
+The final algorithm will run through all 5 sub-algorithms (Fast Gradient Sign, Basic Iterative, Deep Fool, Carlini-Wagner, and Projected Gradient) at 10 iterations. For each algorithm a "success index" is made based on the number of successfully fooled images at 10 iterations per image. The algorithm with the highest success index is the one that will be chosen to run through all the iterations.  
+
+\newpage
+\section{References}
+\begin{enumerate}
+    \item Morgan, A. (2022, May 2). A review of DeepFool: A simple and accurate method to fool Deep Neural Networks. Medium. Retrieved April 28, 2023, from https://medium.com/machine-intelligence-and-deep-learning-lab/a-review-of-deepfool-a-simple-and-accurate-method-to-fool-deep-neural-networks-b016fba9e48e 
+    \item 
+    
+\end{enumerate}
 
 \end{document}
