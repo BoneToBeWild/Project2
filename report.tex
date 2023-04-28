@@ -12,6 +12,7 @@
 \usepackage{hyperref,color}
 \usepackage{enumitem,amssymb}
 \usepackage{indentfirst}
+\usepackage{listings}
 \usepackage{hyperref}
 \usepackage{graphicx}
 \newlist{todolist}{itemize}{4}
@@ -65,15 +66,15 @@ Accountable together - we are Purdue.''}
 \begin{table}[h!]
   \begin{center}
     \label{tab:table1}
-    \begin{tabular}{c|ccccccc|c|c}
-      Student & Alg 1 & Alg 2 & Alg 3 & Alg 4 & Alg 5 & Main Alg & Report & Overall & DIFF\\
+    \begin{tabular}{c|ccccc|c|c}
+      Student & Alg. Dev. & Complex. Analysis & Implement. &  Perf. Analysis/Tests & Report & Ovrll & DIFF\\
       \hline
-      Henry Liu & 25 & 25 & 25 & 25 & 25 & 25 & 25 & 175 & 0\\
-      Keegan Kell & 25 & 25 & 25 & 25 & 25 & 25 & 25 & 175 & 0\\
-      Francis Stolorz & 25 & 25 & 25 & 25 & 25 & 25 & 25 & 175 & 0\\
-      Jair Zenil Martinez & 25 & 25 & 25 & 25 & 25 & 25 & 25 & 175 & 0\\
+      Henry Liu & 20 & 20 & 20 & 20 & 20 & 100 & 0\\
+      Keegan Kell & 20 & 20 & 20 & 20 & 20 & 100 & 0\\
+      Francis Stolorz & 20 & 20 & 20 & 20 & 20 & 100 & 0\\
+      Jair Zenil M. & 20 & 20 & 20 & 20 & 20 & 100 & 0\\
       \hline
-      St Dev & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
+      St Dev & 0 & 0 & 0 & 0 & 0 & 0 & 0
     \end{tabular}
   \end{center}
 \end{table}
@@ -86,8 +87,7 @@ Accountable together - we are Purdue.''}
 \begin{document}
 
 \addcoversheet
-\addtodo
-
+\setlength{\headheight}{14pt}
 % BEGIN YOUR ASSIGNMENT HERE:
 \newpage
 \tableofcontents
@@ -104,6 +104,9 @@ To complete this project, a complete justification of the rationale for selectin
 
 \newpage
 \section{Problem Being Addressed}
+The main problem that our team is aiming to address in this project is to train an algorithm that will perform adversarial attacks on a binary image classifier. In order to accomplish this, the team worked on developing five sub-algorithms to independently attempt to deceive the given classifier. Our team decided that we would independently work on completing the sub-algorithms and then shift towards developing the weighted majority classifier.
+The idea was then to place these sub-algorithms within a classifier that would assign weights according to the weighted majority classifier. 
+
 
 
 \newpage
@@ -121,8 +124,89 @@ The resulting adversarial example is designed to be as close to the original inp
 
 We chose the FGSM method because it is fast, computationally efficient, and easy to implement, making it a suitable choice for adversarial attacks. It has been shown to be effective against a wide range of deep learning models, including image classifiers. FGSM can successfully fool binary image classifiers with a relatively small number of perturbations, even with a low pixel budget. Additionally, FGSM can be used to generate a large number of adversarial examples quickly, which is important when optimizing the weights of the different sub-algorithms.
 \subsection{Basic Iterative Method}
+The Basic Iterative Method is a technique that is an extension of the FGSM. Instead of taking large steps, the BIM uses smaller steps and iterations to change the image, which results in higher rate of success. BIM is very straightforward and easy to manipulate using the right libraries in r, we can easily change the input values so that the algorithm run faster for perform better. \\
+
+
 \subsection{Deep Fool}
 \subsection{Carlini-Wagner}
+
+The CW attack algorithm is an optimization-based adversarial attack that generates perturbations in the input data to deceive deep learning models. The algorithm focuses on crafting adversarial examples with minimal perturbation to the original input, making it challenging for humans to perceive the difference between the original and the modified input. The CW attack algorithm is highly effective in fooling various deep learning models, including image classifiers, even when the models implement robust defenses.\\
+
+In the given problem, we have a pre-trained image classification model that classifies images as either X or Y, based on the preponderance of evidence. The classifier considers a 51 percent probability of an image being an X as sufficient to classify it as an X. Our goal is to use the CW attack algorithm to fool the classifier into misclassifying the images while adhering to a specific pixel budget. The pixel budget determines the number of pixels that can be altered in the image, which is expressed as a ratio of the total image size (e.g., 0.01 uses 1 percent of the available pixels, 1/P uses only one pixel).\\
+
+The CW attack algorithm operates by solving an optimization problem that seeks to minimize the perturbation added to the original input while maximizing the classifier's misclassification probability. The algorithm comprises three main components, the objective function, binary search, and the gradient descent. The objective function consists of two terms. The first term measures the difference between the original input and the adversarial example, while the second term represents the misclassification probability. The algorithm aims to minimize the objective function by finding the optimal balance between minimizing perturbation and maximizing misclassification. The CW attack employs a binary search strategy to find the optimal balance between the two terms in the objective function. By adjusting a hyperparameter called the "confidence," the algorithm progressively searches for an adversarial example that can successfully fool the classifier. Finally, the algorithm utilizes gradient descent to iteratively update the adversarial example. It calculates the gradient of the objective function with respect to the input and uses it to adjust the adversarial example in the direction that minimizes the objective function.
+
+\subsubsection{Generating Adverserial Image}
+
+Below is the function for generating the adverserial image. \\
+
+\begin{lstlisting}[language=R, frame=single]
+generateadversarialexample <- function(image, pixelbudgetratio, model) {
+  # Normalize the input image
+  image <- image / 255
+  
+  # Calculate the pixel budget
+  pixelbudget <- ceiling(prod(dim(image)) * pixelbudgetratio)
+  
+  # Initialize the Carlini-Wagner attack
+  attack <- CarliniWagnerL2(sess, model, nb_classes = 2, batch_size = 1,
+                             confidence = 0, targeted = FALSE, learning_rate = 0.01,
+                             binary_search_steps = 9, max_iterations = 1000,
+                             abort_early = TRUE, initial_const = 0.01,
+                             clip_min = 0, clip_max = 1,
+                             maxperturbations = pixelbudget)
+  
+  # Generate the adversarial example
+  adversarial_image <- attack$attack(image)
+  
+  return(adversarial_image)
+}
+
+# generate adverserial image
+
+# Load an image from your dataset
+image <- ... # Load your specific image here
+
+# Set the pixel budget ratio
+pixel_budget_ratio <- 0.01  # Adjust this value as needed
+
+# Generate the adversarial example
+adversarial_image <- generate_adversarial_example(image, pixel_budget_ratio, model)
+\end{lstlisting}
+
+The function "generateadversarialexample" generates adversarial images. The function takes three arguments: the input image, the pixelbudgetratio, and the pre-trained model. The goal of this function is to create an adversarial image that fools the classifier while altering a limited number of pixels according to the specified pixel budget ratio.\\
+
+In the first line the input image is normalized by dividing its pixel value by 255.Normalizing the image ensures that the pixel values fall within the range [0, 1], which is the standard input format for most deep learning models. Next, the pixel budget is calculated by multiplying the total number of pixels in the image (obtained using prod(dim(image))) with the pixelbudgetratio. The ceiling() function rounds up the result to the nearest integer value, ensuring that the pixel budget is a whole number.\\
+
+The Carlini-Wagner attack using the CarliniWagnerL2-function from the 'cleverhans' library. The function takes several arguments, such as the TensorFlow session (sess), the pre-trained model (model), the number of classes (nbclasses), and various hyperparameters controlling the attack's behavior. The maxperturbations parameter is set to the calculated pixelbudget to limit the number of pixels that can be altered in the image. The adverserial image is generated by calling the attack object as generated. 
+
+\subsubsection{Testing of the Carlini-Wagner algorithim}
+
+Below is a script to test the Carlini-Wagner algorithim. The goal is to see if the generated adverserial image actually fooled the classifier. \\
+
+The par(mfrow = c(1, 2)) function call sets up a plotting area with one row and two columns, allowing us to display two images side by side. The two plot functions display the original and adversarial images, respectively, with their corresponding titles. This visual comparison helps us confirm that the adversarial image is very similar to the original image, with only subtle differences introduced by the Carlini-Wagner attack algorithm.\\
+
+To test the classifier, the predict() function is used to obtain the model's output probabilities for each class (X or Y) when presented with the original and adversarial images. The array reshape() function reshapes the images into a format suitable for the classifier. The which.max() function returns the index of the maximum probability, which corresponds to the predicted class.\\
+
+Finally, the cat() function to display the predicted classes for the original and adversarial images. If the Carlini-Wagner attack algorithm is successful, the classifier's prediction for the adversarial image should differ from the original image's prediction, despite the visual similarity between the two images. This outcome demonstrates the algorithm's effectiveness in fooling the image classifier while adhering to the specified pixel budget.\\
+
+\begin{lstlisting}[language=R, frame=single]
+
+# Display the original and adversarial images
+par(mfrow = c(1, 2))
+plot(as.raster(image), main = "Original Image")
+plot(as.raster(adversarial_image), main = "Adversarial Image")
+
+# Test the classifier
+original_pred <- which.max(predict(model, array_reshape(image, c(1, dim(image)))))
+adversarial_pred <- which.max(predict(model, array_reshape(adversarial_image, c(1, dim(adversarial_image)))))
+
+cat("Original Image Prediction:", original_pred, "\n")
+cat("Adversarial Image Prediction:", adversarial_pred, "\n")
+
+\end{lstlisting}
+
+
 \subsection{Projected Gradient Descent}
 
 \newpage
@@ -144,5 +228,7 @@ We chose the FGSM method because it is fast, computationally efficient, and easy
 \newpage\subsection{Performance}
 
 \newpage\subsection{Final Algorithm Selection Justification}
+
+The final algorithim will run through all 5 sub-algorithims (Fast Gradient Sign, Basic Iterative, Deep Fool, Carlini-Wagner, and Projected Gradient) at 5 iterations. For each algorithim a "success index" is made based on .... . The algorithim with the highest success index is the one that will be chosen to run through all the iterations.  
 
 \end{document}
