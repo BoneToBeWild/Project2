@@ -382,7 +382,22 @@ if (countFGSM <= countBIM & countFGSM <= countDF & countFGSM <= countCW & countF
 
 \subsection{Fast Gradient Sign Method }
 \begin{lstlisting}[language=R, frame=single]
+\subsection{Fast Gradient Sign Method }
+\begin{lstlisting}[language=R, frame=single]
+for (i in 1:budget) {
+  # Compute gradient of loss function with respect to image
+  gradient <- compute_gradient(loss_fn, image, target_class)
+  
+  # Compute sign of gradient and multiply by step size
+  perturbation <- step_size * sign(gradient)
+  
+  # Add perturbation to image and clip pixel values
+  advImage <- pmin(pmax(image + perturbation, 0), 1)
+}
 
+# Return modified image
+return(advImage)
+\end{lstlisting}
 \end{lstlisting}
 
 
