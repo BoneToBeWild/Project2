@@ -131,6 +131,10 @@ We chose the FGSM method because it is fast, computationally efficient, and easy
 \subsection{Basic Iterative Method}
 The Basic Iterative Method is a technique that is an extension of the FGSM. Instead of taking large steps, the BIM uses smaller steps and iterations to change the image, which results in higher rate of success. BIM is very straightforward and easy to manipulate using the right libraries in r, we can easily change the input values so that the algorithm run faster for perform better. \\
 
+In the Appendix 7.3 there is the code used for BIM. The function calculates the gradient of the model and image then find their signs (positive or negative). Next creates perturbation based on the signs and budget which is used to alter the original image in the next few lines. \\
+
+The correctness of the BIM algorithm relies on the same assumptions as the FGS algorithm, but its iterative nature allows for a more fine-grained search of the adversarial perturbations. The BIM algorithm has been demonstrated to produce more effective adversarial examples than the FGS algorithm, while still maintaining a relatively low computational cost. Therefore, the BI algorithm can be considered as a valid approach for the given problem, with the caveat that its performance may also be affected by the simplifying assumptions regarding the decision boundaries.\\
+
 
 \subsection{DeepFool} 
 The DeepFool algorithm is used to misclassify an image by computing the minimal perturbations required in the most efficient manner. The authors Moosavi-Dezfooli et al. [2] performed their testing alongside the FGSM method in order to compare results and found that although both could misclassify the original image, FGSM required more perturbations and was thus more noticeable than DeepFool. We wanted to include DeepFool so that we could compare it with our own findings for FGSM. In order to do this, the DeepFool algorithm computes the minimal perturbation by finding the smallest distance to teh decision boundary of a model through many iterations. As Morgan [3] writes, "in order to obtain the minimal perturbation for the classifier of 'f' to misclassify the input image of 'x', the perturbation of r*(x) must project the input image of 'x' orthogonal to the hyperplane of the binary classifier.", it applies this approach iteratively to modify the given image until the classified output changes. This is done in small steps so that at least visually, the images look identical. \\
@@ -161,6 +165,9 @@ The Carlini-Wagner attack using the CarliniWagnerL2-function from the 'cleverhan
 
 
 \subsection{Projected Gradient Descent}
+The Projected Gradient Descent (PGD) algorithm is another advanced adversarial attack method that extends the FGS algorithm. The PGD algorithm performs a gradient-based optimization to find adversarial perturbations, but it projects the resulting perturbations onto a predefined constraint set to ensure that the pixel values remain within a valid range. This projection step makes the PGD algorithm more robust against various defense mechanisms.\\
+
+The correctness of the PGD algorithm relies on its ability to accurately model the gradient information of the classifier while adhering to the constraint set. The PGD algorithm has been shown to produce effective adversarial examples and has been used as a benchmark for evaluating the robustness of different classifiers. The PGD algorithm has a higher computational cost compared to the FGS and BI algorithms, but its projection step makes it more robust against defensive mechanisms. In the context of the given problem, the PGD algorithm can be considered as a valid approach, as it offers a more robust way to generate adversarial perturbations while maintaining the pixel budget constraints.\\
 
 \newpage
 \section{Correctness of Proofs}
