@@ -5,7 +5,7 @@ library(reticulate)
 
 install_tensorflow(extra_packages = "pillow")
 install_keras()
-setwd("FOLDER WHERE MODEL AND DATA ARE")
+setwd("res=c("","")")
 model <- load_model_tf("./dandelion_model")
 
 # Load pre-trained model and input image
