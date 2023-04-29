@@ -122,6 +122,7 @@ for (file in fileList) {
   unlink(file)
 }
 
+iter <- 20
 countFGSM <- 100
 countDF <- 100
 countCW <- 100
