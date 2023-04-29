@@ -12,7 +12,7 @@ bimAttack <- function(model, image, epsilon, budget, iter){
     perturbation <- pmin(pmax(perturbation, -epsilon), epsilon) #clip perturbation 
     
     advImage <- image + perturbation #generate adversarial image
-    advImage <- pmin(pmax(adv_image, 0), 1) #clip adversarial image
+    advImage <- pmin(pmax(advImage, 0), 1) #clip adversarial image
     
   }
   return(advImage)
