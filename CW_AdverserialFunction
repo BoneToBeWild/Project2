@@ -18,9 +18,9 @@ if(pred[1,2]<0.50){
 }
 
 res=c("","")
-f=list.files("./dandelions")
+f=list.files("C:\Users\Lenovo\Desktop\Purdue\ie332\a2p2\data-for-332\dandelions\")
 for (i in f){
-test_image <- image_load(paste("./dandelions/",i,sep=""),
+test_image <- image_load(paste("C:\Users\Lenovo\Desktop\Purdue\ie332\a2p2\data-for-332\dandelions\",i,sep=""),
                                   target_size = target_size)
 x <- image_to_array(test_image)
 x <- array_reshape(x, c(1, dim(x)))
@@ -32,12 +32,12 @@ if(pred[1,1]<0.50){
 }
 print(res)
 
-generate_adversarial_example <- function(image, pixel_budget_ratio, model) {
-  # Normalize the input image
+generate_adversarial_example <- function(image, pb_ratio, model) {
+  # Input image normalization
   image <- image / 255
   
-  # Calculate the pixel budget
-  pixel_budget <- ceiling(prod(dim(image)) * pixel_budget_ratio)
+  # Pixel budget calculation
+  pixel_budget <- ceiling(prod(dim(image)) * pb_ratio)
   
   # Initialize the Carlini-Wagner attack
   attack <- CarliniWagnerL2(sess, model, nb_classes = 2, batch_size = 1,
@@ -56,10 +56,10 @@ generate_adversarial_example <- function(image, pixel_budget_ratio, model) {
 # generate adverserial image
 
 # Load an image from your dataset
-image <- ... # Load your specific image here
+image <- C:\Users\Lenovo\Desktop\Purdue\ie332\a2p2\data-for-332\dandelions\636597665741397587-dandelion-1097518082.jpg
 
-# Set the pixel budget ratio
-pixel_budget_ratio <- 0.01  # Adjust this value as needed
+# Pixel Budget Radio (1% = 0.01)
+pb_ratio <- 0.01  
 
 # Generate the adversarial example
-adversarial_image <- generate_adversarial_example(image, pixel_budget_ratio, model)
+adversarial_image <- generate_adversarial_example(image, pb_ratio, model)

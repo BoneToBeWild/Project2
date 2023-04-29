@@ -12,6 +12,7 @@
 \usepackage{hyperref,color}
 \usepackage{enumitem,amssymb}
 \usepackage{indentfirst}
+\usepackage{listings}
 \usepackage{hyperref}
 \usepackage{graphicx}
 \newlist{todolist}{itemize}{4}
@@ -65,15 +66,15 @@ Accountable together - we are Purdue.''}
 \begin{table}[h!]
   \begin{center}
     \label{tab:table1}
-    \begin{tabular}{c|ccccccc|c|c}
-      Student & Alg 1 & Alg 2 & Alg 3 & Alg 4 & Alg 5 & Main Alg & Report & Overall & DIFF\\
+    \begin{tabular}{c|ccccc|c|c}
+      Student & Alg. Dev. & Complex. Analysis & Implement. &  Perf. Analysis/Tests & Report & Ovrll & DIFF\\
       \hline
-      Henry Liu & 25 & 25 & 25 & 25 & 25 & 25 & 25 & 175 & 0\\
-      Keegan Kell & 25 & 25 & 25 & 25 & 25 & 25 & 25 & 175 & 0\\
-      Francis Stolorz & 25 & 25 & 25 & 25 & 25 & 25 & 25 & 175 & 0\\
-      Jair Zenil Martinez & 25 & 25 & 25 & 25 & 25 & 25 & 25 & 175 & 0\\
+      Henry Liu & 20 & 20 & 20 & 20 & 20 & 100 & 0\\
+      Keegan Kell & 20 & 20 & 20 & 20 & 20 & 100 & 0\\
+      Francis Stolorz & 20 & 20 & 20 & 20 & 20 & 100 & 0\\
+      Jair Zenil M. & 20 & 20 & 20 & 20 & 20 & 100 & 0\\
       \hline
-      St Dev & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
+      St Dev & 0 & 0 & 0 & 0 & 0 & 0 & 0
     \end{tabular}
   \end{center}
 \end{table}
@@ -84,10 +85,10 @@ Accountable together - we are Purdue.''}
 }
 
 \begin{document}
+\sloppy
 
 \addcoversheet
-\addtodo
-
+\setlength{\headheight}{14pt}
 % BEGIN YOUR ASSIGNMENT HERE:
 \newpage
 \tableofcontents
@@ -102,16 +103,23 @@ The number of successfully deceived photographs at a specific budget level will 
 
 To complete this project, a complete justification of the rationale for selecting each of the five machine learning algorithms will be provided. This justification will also cover how they were trained and how the optimizer allocates the votes. Finally, the justification should explain why such an approach should work. All code, notes, documentation, etc. must be tracked using Git and Github for verification of the effort contributed by each team member. 
 
-\newpage
 \section{Problem Being Addressed}
+The main problem that our team is aiming to address in this project is to train an algorithm and sub-algorithms that will perform adversarial attacks on a pre-trained image classification model. The pre-trained image classification model is given to us, and must be loaded into our code. This model works by accepting an image, and then proceeds to attempt to classify the image as either X or Y.  It does this classification based on the preponderance of the evidence, that is 51\% probability of an image being an X means the machine will classify it as a X.\\
 
+These sub-algorithms must be placed within one main algorithm. This main algorithm will assign weights to the other five algorithms, along the lines of the weighted majority classifier. The final result must be able to fool the image classifier that is provided with exactly B pixels changed in the image. The main algorithm must assign weights to the different algorithms based on some expected performance given the image. Once the algorithms vote on which set of pixels will be changed, the optimizer will select which pixels to actually use from the set. The only thing that will impact the budget for this project will be the absolute number of pixels used to fool the classifier. The adversarial function input must be both image and scalar, which tells the algorithm the expected budget in terms of the ratio image size. Our model must be able to successfully fool the classifier with a budget of P/100, for at least one image, where P is the number of pixels in the image, and must do this in less than 10 seconds per image.
 
-\newpage
 \section{Solution to the Problem}
+In order to accomplish the problem above, the team first worked on choosing and developing five sub-algorithms to independently attempt to deceive the given classifier. The methods of these five sub-algorithms include the Fast Gradient Sign Method, the Basic Iterative Method, the DeepFool method, the Carlini-Wagner method, and the Projected Gradient Descent method. These methods were carefully chosen by conducting extensive research, and we concluded that these methods would work best for our overall algorithm. Our team decided that we would independently work on completing the sub-algorithms individually, and then shift towards developing the weighted majority classifier.\\
+
+We believe that by dividing the labor among the group, each team member would be able to specialize in an algorithm and provide higher quality results. Once weights have been assigned, the highest scoring algorithm would be chosen for use against the model. For a successful algorithm, it is expected that it all images in each respective folder, dandelion and grass, would be returned as the model is structured so that if it is unable to categorize the image correctly with a probability greater than fifty percent.\\
+
+Along with choosing algorithms, other research had to be done to obtain our goal. Our team read up on the two different types of classifiers provided. These two classifiers are the simple majority classifier and the weighted majority classifier. The simple majority classifier works by each individual voting on on class, and then the majority vote wins. This is a simple classifier, however, it has its limitations and may not work well on more complex data sets. The second classifier is the weighted majority classifier, which is the classifier being used in this project. The weighted majority classifier works by assigning an importance weight to every individual classifier, and the target class with the greatest weighted-sum probabilities wins. This classifier is not as simple, but is more effective for this type of problem. A better understanding of these classifiers was crucial in getting the best possible result.\\
+
+In order to track our progress, the group had to record all of our updates (to the algorithms and report) using Git and Github. This will help show the contributions for each group member. All experimental variants of our algorithm will be tracked with separate branches and the best one will then be merged into main. We must repeat this iteration process until we are completely satisfied with out final algorithm. In addition to following the A2P2 document, there were also several updates posted to Brightspace that also had to be followed. These included creating a python notebook to use Vertex AI, and links and methods to prevent model loading issues.
 
 \newpage
 \noindent\section{Selection of Algorithms}
-As a group, we have selected five sub-algorithms that we believe will work best for our overall algorithm. These sub-algorithms were carefully selected, and each one was assigned to a group member. Below is a description of each algorithm, how it works, and the process of each algorithm.
+As a group, we have selected five sub-algorithms that we believe will work best for our overall algorithm. These sub-algorithms were carefully selected, and each one was assigned to a group member. Below is a description of each algorithm and how it works. 
 \subsection{Fast Gradient Sign Method}
 The Fast Gradient Sign Method is a technique used in adversarial machine learning to generate adversarial examples that can fool a machine learning model. The FGSM algorithm takes advantage of the gradient information of the loss function with respect to the input data to generate adversarial examples.\\
 
@@ -121,28 +129,433 @@ The resulting adversarial example is designed to be as close to the original inp
 
 We chose the FGSM method because it is fast, computationally efficient, and easy to implement, making it a suitable choice for adversarial attacks. It has been shown to be effective against a wide range of deep learning models, including image classifiers. FGSM can successfully fool binary image classifiers with a relatively small number of perturbations, even with a low pixel budget. Additionally, FGSM can be used to generate a large number of adversarial examples quickly, which is important when optimizing the weights of the different sub-algorithms.
 \subsection{Basic Iterative Method}
-\subsection{Deep Fool}
+The Basic Iterative Method is a technique that is an extension of the FGSM. Instead of taking large steps, the BIM uses smaller steps and iterations to change the image, which results in higher rate of success. BIM is very straightforward and easy to manipulate using the right libraries in r, we can easily change the input values so that the algorithm run faster for perform better. \\
+
+
+\subsection{DeepFool} 
+The DeepFool algorithm is used to misclassify an image by computing the minimal perturbations required in the most efficient manner. The authors Moosavi-Dezfooli et al. [2] performed their testing alongside the FGSM method in order to compare results and found that although both could misclassify the original image, FGSM required more perturbations and was thus more noticeable than DeepFool. We wanted to include DeepFool so that we could compare it with our own findings for FGSM. In order to do this, the DeepFool algorithm computes the minimal perturbation by finding the smallest distance to teh decision boundary of a model through many iterations. As Morgan [3] writes, "in order to obtain the minimal perturbation for the classifier of 'f' to misclassify the input image of 'x', the perturbation of r*(x) must project the input image of 'x' orthogonal to the hyperplane of the binary classifier.", it applies this approach iteratively to modify the given image until the classified output changes. This is done in small steps so that at least visually, the images look identical. \\
+
+Runtime and performance tradeoffs for DeepFool vary on the size and sophistication of the data but based off DeepFool's authors results, we can get a rough idea of what our results would have looked like. Moosavi-Dezfooli et al. [2] ran DeepFool on six different datasets for one sample, with an average time to compute one sample was 465 ms, applying this to our own data, we were given 37 images of dandelions and 48 images of grass. Each dataset could have taken roughly 17,205 ms for dandelions and 22,320 ms for grass. To contrast, FGSM is able to produce the perturbation much quicker because it only applies one iteration, however the perturbation is on average five times larger than DeepFool's, and as seen in the results section of Moosavi-Dezfooli et al. [2], the accuracy of FGSM was lower across all methods, than DeepFool's due the larger perturbation. \\
+
+To generate testing pairs for DeepFool, we would apply it to a copy of the given data to create a reference point for every sample. We would apply the DeepFool to generate a set of adversarial images that would be used to compare the performance of the model on both the original and perturbed variations. The DeepFool algorithm has no need for knowledge representations because it does not rely on them, instead it proceeds by computing the gradient of the machine learning model and then finding the least distance between the decision boundary and the original point. \\
+
+
+
+
 \subsection{Carlini-Wagner}
+
+The CW attack algorithm is an optimization-based adversarial attack that generates perturbations in the input data to deceive deep learning models. The algorithm focuses on crafting adversarial examples with minimal perturbation to the original input, making it challenging for humans to perceive the difference between the original and the modified input. The CW attack algorithm is highly effective in fooling various deep learning models, including image classifiers, even when the models implement robust defenses.\\
+
+In the given problem, we have a pre-trained image classification model that classifies images as either X or Y, based on the preponderance of evidence. The classifier considers a 51 percent probability of an image being an X as sufficient to classify it as an X. Our goal is to use the CW attack algorithm to fool the classifier into misclassifying the images while adhering to a specific pixel budget. The pixel budget determines the number of pixels that can be altered in the image, which is expressed as a ratio of the total image size (e.g., 0.01 uses 1 percent of the available pixels, 1/P uses only one pixel).\\
+
+The CW attack algorithm operates by solving an optimization problem that seeks to minimize the perturbation added to the original input while maximizing the classifier's misclassification probability. The algorithm comprises three main components, the objective function, binary search, and the gradient descent. The objective function consists of two terms. The first term measures the difference between the original input and the adversarial example, while the second term represents the misclassification probability. The algorithm aims to minimize the objective function by finding the optimal balance between minimizing perturbation and maximizing misclassification. The CW attack employs a binary search strategy to find the optimal balance between the two terms in the objective function. By adjusting a hyperparameter called the "confidence," the algorithm progressively searches for an adversarial example that can successfully fool the classifier. Finally, the algorithm utilizes gradient descent to iteratively update the adversarial example. It calculates the gradient of the objective function with respect to the input and uses it to adjust the adversarial example in the direction that minimizes the objective function.
+
+\subsubsection{Generating Adversarial Image}
+
+The function "generateadversarialexample" generates adversarial images. The function takes three arguments: the input image, the pb-ratio, and the pre-trained model. The goal of this function is to create an adversarial image that fools the classifier while altering a limited number of pixels according to the specified pixel budget ratio.\\
+
+The entire code can be found in Appendix 8.1.1. In the first line the input image is normalized by dividing its pixel value by 255. Normalizing the image ensures that the pixel values fall within the range [0, 1], which is the standard input format for most deep learning models. Next, the pixel budget is calculated by multiplying the total number of pixels in the image (obtained using prod(dim(image))) with the pb-ratio. The ceiling() function rounds up the result to the nearest integer value, ensuring that the pixel budget is a whole number.\\
+
+The Carlini-Wagner attack using the CarliniWagnerL2-function from the 'cleverhans' library. The function takes several arguments, such as the TensorFlow session (sess), the pre-trained model (model), the number of classes (nbclasses), and various hyperparameters controlling the attack's behavior. The maxperturbations parameter is set to the calculated pixelbudget to limit the number of pixels that can be altered in the image. The adverserial image is generated by calling the attack object as generated. 
+
+
+
 \subsection{Projected Gradient Descent}
 
 \newpage
 \section{Correctness of Proofs}
 
+As a group we chose 5 parameters to base our correctness of proof analysis on. These five are validating the input, creating adversarial examples, bounding the perturbation, evaluating the effectiveness, and examining the convergence properties. \\
+
+\subsection{Fast Gradient Sign}
+
+The Fast Gradient Sign (FGS) algorithm is a popular white-box adversarial attack technique that computes the gradient of the loss function with respect to the input image. The algorithm creates adversarial examples by perturbing the input image with the sign of the gradient multiplied by a small scalar, epsilon. The FGS algorithm is relatively fast and straightforward to implement.\\
+
+The correctness of the FGS algorithm can be analyzed by understanding the assumptions it makes about the model's decision boundaries. FGS assumes that the decision boundaries are linear, which might not be true for complex models like deep neural networks. However, the FGS algorithm has been empirically proven to be effective in fooling image classifiers, even though its theoretical basis relies on simplifying assumptions. This suggests that FGS can be considered as a valid approach for the given problem, but its performance may not be optimal in all cases.\\
+
+The first step in analyzing the correctness of the FGS algorithm is validating the input. The input to the algorithm is an image that needs to be perturbed to fool the classifier. The algorithm assumes that the input image is a valid example from the given distribution and that it is correctly classified by the classifier. The FGS algorithm generates adversarial examples by perturbing the input image with the sign of the gradient of the loss function with respect to the input image, multiplied by a small scalar, epsilon. The gradient information is obtained by computing the gradient of the loss function for the given input image and target class. The sign of the gradient is used to determine the direction in which the pixel values should be perturbed to maximize the loss function.The algorithm perturbs the input image by adding the scaled sign of the gradient, which can result in pixel values that lie outside the valid range. To ensure that the adversarial examples remain valid and perceptually similar to the original image, the perturbations must be constrained within a specific range. The final aspect of the correctness of proof analysis for the FGS algorithm is examining its convergence properties. The convergence properties of the algorithm describe the stability and speed at which the algorithm converges to an adversarial example. Ideally, the algorithm should converge quickly to generate effective adversarial examples with minimal computation.
+
+\subsection{Basic Iterative}
+
+The Basic Iterative (BIM) algorithm is an extension of the FGS algorithm that applies the FGS method iteratively, allowing for more precise perturbations. The algorithm performs a fixed number of iterations, applying the FGS method at each step and clipping the resulting adversarial image to ensure that the pixel values remain within a valid range.\\
+
+The correctness of the BIM algorithm relies on the same assumptions as the FGS algorithm, but its iterative nature allows for a more fine-grained search of the adversarial perturbations. The BIM algorithm has been demonstrated to produce more effective adversarial examples than the FGS algorithm, while still maintaining a relatively low computational cost. Therefore, the BI algorithm can be considered as a valid approach for the given problem, with the caveat that its performance may also be affected by the simplifying assumptions regarding the decision boundaries.\\
+
+\subsection{Deep Fool}
+
+The Deep Fool (DF) algorithm is a more advanced adversarial attack technique that aims to find the minimal perturbation required to cross the decision boundary of the classifier. The algorithm iteratively linearizes the decision boundary around the current input image and computes the minimal perturbation to cross the linearized boundary. This process is repeated until the adversarial example is misclassified by the model.\\
+
+The correctness of the DF algorithm relies on the assumption that the decision boundaries are locally linear, which is a more relaxed assumption compared to the FGS and BI algorithms. The DF algorithm has been shown to produce more effective and minimal adversarial perturbations, but it has a higher computational cost due to the iterative nature of the algorithm. In the context of the given problem, the DF algorithm can be considered as a valid approach, as it offers a more accurate estimation of the decision boundaries, albeit at a higher computational cost.\\
+
+\subsection{Carlini Wagner}
+
+The Carlini Wagner (CW) algorithm is a more sophisticated attack method that optimizes an objective function that combines the model's loss and a distance metric between the original and adversarial images. The optimization is performed using a gradient-based approach, which allows for a more targeted search of the adversarial perturbations.\\
+
+The correctness of the CW algorithm relies on its ability to accurately model the relationship between the input image and the model's output. The CW algorithm has been demonstrated to produce highly effective adversarial examples, even against models with defensive mechanisms. However, the CW algorithm has a higher computational cost due to the optimization process,which might be a limiting factor in the context of the given problem. Despite the increased computational cost, the CW algorithm can be considered as a valid approach, as it provides a more principled way to generate adversarial perturbations and has proven effective in fooling a wide range of classifiers.\\
+
+\subsection{Projected Gradient Descent}
+
+The Projected Gradient Descent (PGD) algorithm is another advanced adversarial attack method that extends the FGS algorithm. The PGD algorithm performs a gradient-based optimization to find adversarial perturbations, but it projects the resulting perturbations onto a predefined constraint set to ensure that the pixel values remain within a valid range. This projection step makes the PGD algorithm more robust against various defense mechanisms.\\
+
+The correctness of the PGD algorithm relies on its ability to accurately model the gradient information of the classifier while adhering to the constraint set. The PGD algorithm has been shown to produce effective adversarial examples and has been used as a benchmark for evaluating the robustness of different classifiers. The PGD algorithm has a higher computational cost compared to the FGS and BI algorithms, but its projection step makes it more robust against defensive mechanisms. In the context of the given problem, the PGD algorithm can be considered as a valid approach, as it offers a more robust way to generate adversarial perturbations while maintaining the pixel budget constraints.\\
+
+\subsection{Main Algorithm}
+
+The main algorithm creates adversarial examples by combining the outputs of the five sub-algorithms using a weighted majority classifier. This ensemble approach leverages the strengths of each sub-algorithm while mitigating their individual weaknesses. The correctness of the main algorithm in creating adversarial examples relies on its ability to assign appropriate weights to the different sub-algorithms based on their expected performance given the input image.\\
+
+The main algorithm's success in generating adversarial examples is determined by how effectively it combines the outputs of the sub-algorithms. By assigning appropriate weights to each sub-algorithm and aggregating their results, the main algorithm can generate more effective adversarial examples that can fool the image classifier.\\
+
+The main algorithm's perturbation bounding is determined by the individual sub-algorithms' perturbation constraints. The main algorithm can maintain the pixel budget constraints by appropriately assigning weights to the sub-algorithms based on their ability to generate adversarial examples within the given budget. As long as the sub-algorithms adhere to the perturbation constraints, the main algorithm will generate adversarial examples that respect the pixel budget constraints. The effectiveness of the main algorithm can be evaluated by measuring the success rate of the generated adversarial examples in fooling the classifier. A high success rate indicates that the main algorithm effectively combines the outputs of the sub-algorithms and generates adversarial examples that can mislead the classifier. The correctness of the main algorithm's proof relies on its ability to generate effective adversarial examples by leveraging the strengths of the individual sub-algorithms and mitigating their weaknesses.\\
+
 \newpage
 \section{Complexity Analysis}
 
-\clearpage
-\section{References}
+As a group we have decided to evaluate the time and space complexity of the five sub algorithims (Fast Gradient Sign, Basic Iterative, Deep Fool, Carlini Wagner, and Projected Gradient Descent)\\
 
-\newpage
+\subsection{Fast Gradient Sign}
+
+The FGS algorithm computes the gradients of the loss function with respect to the input image to generate an adversarial perturbation. The time complexity of the FGS algorithm is determined by the number of operations required to compute these gradients. In a feedforward neural network, the computational cost for a single forward pass is determined by the number of parameters (weights and biases) in the network. This cost is proportional to the number of neurons and the number of connections between them. Let P be the total number of parameters in the neural network. The time complexity for a forward pass through the neural network is O(P). Similarly, the computational cost for a single backward pass (backpropagation) is also proportional to the number of parameters in the network. The backward pass is required to compute the gradients of the loss function with respect to the input image. Therefore, the time complexity for a backward pass is O(P). As the FGS algorithm requires one forward pass and one backward pass, its total time complexity is O(P + P) = O(2 * P), which simplifies to O(P). This linear time complexity makes the FGS algorithm computationally efficient compared to other adversarial attack methods.\\
+
+The space complexity of the FGS algorithm is determined by the memory requirements for storing the gradients of the loss function with respect to the input image. Since the gradient computation involves the same number of parameters as the forward pass, the space complexity is also linear with respect to the number of parameters in the neural network. The FGS algorithm needs to store the gradients for each parameter in the neural network, which results in a space complexity of O(P).\\
+
+\subsection{Basic Iterative}
+
+The BIM method applies the FGS algorithm iteratively, with a smaller step size, until a desired level of perturbation or a maximum number of iterations is reached. The time complexity is O(I * P), where I is the number of iterations and P is the total number of parameters in the neural network. The space complexity of the BI method is O(P), as it only needs to store the gradients for each parameter, similar to the FGS algorithm.\\
+
+\subsection{Deep Fool}
+
+The Deep Fool algorithm is iterative and involves multiple forward and backward passes through the neural network to compute the gradients and perturbations. Its time complexity is O(I * P), where I is the number of iterations and P is the total number of parameters in the neural network. The number of iterations can vary depending on the input image and the classifier's complexity. The space complexity of the Deep Fool algorithm is O(P), as it needs to store the gradients for each parameter and the perturbations for each iteration.\\
+
+\subsection{Carlini Wagner}
+
+The Carlini Wagner algorithm is an optimization-based method that involves solving a constrained optimization problem using gradient descent. Its time complexity is O(I * P), where I is the number of iterations and P is the total number of parameters in the neural network. The number of iterations can vary depending on the optimization problem's difficulty and the chosen optimization algorithm. The space complexity of the Carlini Wagner algorithm is O(P), as it needs to store the gradients for each parameter and the perturbations for each iteration.
+
+\subsection{Projected Gradient Descent}
+
+The PGD algorithm is an iterative method that involves multiple forward and backward passes through the neural network to compute the gradients and apply perturbations. The time complexity is O(I * P), where I is the number of iterations and P is the total number of parameters in the neural network. The number of iterations can vary depending on the input image and the classifier's complexity. The space complexity of the PGD algorithm is O(P), as it needs to store the gradients for each parameter and the perturbations for each iteration.
+
+\clearpage
 \section{Appendix}
+\subsection{main}
+\begin{lstlisting}[language=R, frame=single]
+library(imager)
+library(tidyverse)
+library(torch)
+library(tensorflow)
+install_tensorflow(extra_packages="pillow")
+library(torchvision)
+library(keras)
+library(reticulate)
+
+setwd("C:/Purdue/IE 332")
+
+model <- load_model_tf("/home/jupyter/332_data/dandelion_model")
+
+width <- 224
+height<- 224
+target_size <- c(width, height)
+rgb <- 3
+
+gu = list.files("/home/jupyter/332_data/data-for-332/grass")
+du = list.files("/home/jupyter/332_data/data-for-332/dandelions")
+
+guFile <- "/home/jupyter/332_data/data-for-332/grass"
+duFile <- "/home/jupyter/332_data/data-for-332/dandelions"
+guAdvFile <- "/home/jupyter/332_data/data-for-332/advgrass"
+duAdvFile <- "/home/jupyter/332_data/data-for-332/advdandelions"
+
+for (i in gu){
+  test_image <- image_load(paste("/home/jupyter/332_data/data-for-332/grass/",i,sep=""),
+                           target_size = target_size)
+  imageGrass <- image_to_array(test_image)
+  imageGrass <- array_reshape(imageGrass, c(1, dim(imageGrass)))
+  imageGrass <- imageGrass/255
+  pred <- model %>% predict(x)
+}
+
+#define variables
+iter <- 10
+step <- 2/255
+epsilon <- 8/255
+budgetRatio <- 0.01
+budget <- ceiling(prod(dim(image)) * budgetRatio)
+
+#run FGSM
+#calculate performance
+countFGSM <- 0
+#delete adv images
+
+#run BIM
+source('/home/jupyter/BIM.R')
+#perform attack
+for(i in gu){
+  advImage <- bimAttack(model, imageGrass, epsilon, budget, iter) #run BIM attack
+  save.image(advImage, file.path(guAdvFile, paste0(i, "_adv.png")))
+}
+
+#calculate performance
+countBIM <- 0
+gm <- list.files("/home/jupyter/332_data/data-for-332/advgrass")
+for (i in gm){
+  test_image <- image_load(paste("/home/jupyter/332_data/data-for-332/advgrass/",i,sep=""),
+                           target_size = target_size)
+  x <- image_to_array(test_image)
+  x <- array_reshape(x, c(1, dim(x)))
+  x <- x/255
+  pred <- model %>% predict(x)
+  if(pred[1,2]<0.50){
+    countBIM <- countBIM + 1
+    print(i)
+  }
+}
+#deleate adv images
+fileList <- list.files(guAdvFile, pattern = "\\.(png|jpe?g)$", full.names = TRUE)
+for (file in fileList) {
+  unlink(file)
+}
+
+#run DF
+#calculate performance
+countDF <- 0
+#delete adv images
+
+#run CW
+#calculate performance
+countCW <- 0 
+#delete adv images
+
+#run PGD
+class <- pred
+source('/home/jupyter/PGD.R')
+#perform attack
+for (i in gu) {
+  advImage <- pgdAttack(image, class, model, epsilon, budget, iter) #apply PGD attack to test image
+  save.image(advImage, file.path(guAdvFile, paste0(i, "_adv.png")))#save modified image
+}
+
+#calculate performance
+countPGD <- 0
+gm <- list.files("/home/jupyter/332_data/data-for-332/advgrass")
+for (i in gm){
+  test_image <- image_load(paste("/home/jupyter/332_data/data-for-332/advgrass/",i,sep=""),
+                           target_size = target_size)
+  x <- image_to_array(test_image)
+  x <- array_reshape(x, c(1, dim(x)))
+  x <- x/255
+  pred <- model %>% predict(x)
+  if(pred[1,2]<0.50){
+    countBIM <- countBIM + 1
+    print(i)
+  }
+}
+
+#deleate adv images
+fileList <- list.files(guAdvFile, pattern = "\\.(png|jpe?g)$", full.names = TRUE)
+for (file in fileList) {
+  unlink(file)
+}
+
+countFGSM <- 100
+countDF <- 100
+countCW <- 100
+if (countFGSM <= countBIM & countFGSM <= countDF & countFGSM <= countCW & countFSGM <= countPGD) {
+  #run FGSM 
+} else if (countBIM <= countDF & countBIM <= countCW & countBIM <= countPGD) {
+  #run BIM 
+  for(i in gu){
+    advImage <- bimAttack(model, imageGrass, epsilon, budget, iter) #run BIM attack
+    save.image(advImage, file.path(guAdvFile, paste0(i, "_adv.png")))
+  }
+} else if (countDF <= countCW & countDF <= countPGD) {
+  #run DF
+} else if (countCW <= countPGD) {
+  #run CW
+} else {
+  #run PGD
+  for (i in gu) {
+    advImage <- pgdAttack(image, class, model, epsilon, budget, iter) #apply PGD attack to test image
+    save.image(advImage, file.path(guAdvFile, paste0(i, "_adv.png")))#save modified image
+  }
+}
+\end{lstlisting}
+
+
+\subsection{Fast Gradient Sign Method }
+\begin{lstlisting}[language=R, frame=single]
+\subsection{Fast Gradient Sign Method }
+\begin{lstlisting}[language=R, frame=single]
+for (i in 1:budget) {
+  # Compute gradient of loss function with respect to image
+  gradient <- compute_gradient(loss_fn, image, target_class)
+  
+  # Compute sign of gradient and multiply by step size
+  perturbation <- step_size * sign(gradient)
+  
+  # Add perturbation to image and clip pixel values
+  advImage <- pmin(pmax(image + perturbation, 0), 1)
+}
+
+# Return modified image
+return(advImage)
+\end{lstlisting}
+\end{lstlisting}
+
+
+\subsection{Basic Iterative Method}
+\begin{lstlisting}[language=R, frame=single]
+library(imager)
+library(keras)
+
+#create BIM attack function
+bimAttack <- function(model, image, epsilon, budget, iter){
+  perturbation <- array(0, dim = dim(image))#define perturbation
+  
+  for(i in iter){
+    gradient <- gradient(model, image) #find gradient
+    gradientSign <- sign(gradient) #find sign of gradient
+    perturbation <- perturbation + budget * gradientSign #update perturbation
+    perturbation <- pmin(pmax(perturbation, -epsilon), epsilon) #clip perturbation 
+    
+    advImage <- image + perturbation #generate adversarial image
+    advImage <- pmin(pmax(adv_image, 0), 1) #clip adversarial image
+    
+  }
+  return(advImage)
+}
+\end{lstlisting}
+
+
+\subsection{Deep Fool}
+\begin{lstlisting}[language=R, frame=single]
+
+\end{lstlisting}
+
+
+\subsection{Carlini-Wagner function}
+\subsubsection{Adverserial Image Generation}
+
+Below is the function that generates adverserial images using the Carlini Wagner method
+
+\begin{lstlisting}[language=R, frame=single]
+library(tensorflow)
+library(keras)
+library(cleverhans)
+library(png)
+
+res=c("","")
+f=list.files("C:\Users\Lenovo\Desktop\Purdue\ie332\a2p2\data-for-332\dandelions\")
+for (i in f){
+test_image <- image_load(paste("C:\Users\Lenovo\Desktop\Purdue\ie332\a2p2\data-for-332\dandelions\",i,sep=""),
+                                  target_size = target_size)
+x <- image_to_array(test_image)
+x <- array_reshape(x, c(1, dim(x)))
+x <- x/255
+pred <- model %>% predict(x)
+if(pred[1,1]<0.50){
+ print(i)
+}
+}
+print(res)
+
+generate_adversarial_example <- function(image, pb_ratio, model) {
+  # Input image normalization
+  image <- image / 255
+  
+  # Pixel budget calculation
+  pixel_budget <- ceiling(prod(dim(image)) * pb_ratio)
+  
+  # Initialize the Carlini-Wagner attack
+  attack <- CarliniWagnerL2(sess, model, nb_classes = 2, batch_size = 1,
+                             confidence = 0, targeted = FALSE, learning_rate = 0.01,
+                             binary_search_steps = 9, max_iterations = 1000,
+                             abort_early = TRUE, initial_const = 0.01,
+                             clip_min = 0, clip_max = 1,
+                             max_perturbations = pixel_budget)
+  
+  # Generate the adversarial example
+  adversarial_image <- attack$attack(image)
+  
+  return(adversarial_image)
+}
+
+image <- C:\Users\Lenovo\Desktop\Purdue\ie332\a2p2\data-for-332\dandelions\636597665741397587-dandelion-1097518082.jpg
+
+# Pixel Budget Radio (1% = 0.01)
+pb_ratio <- 0.01  
+
+# Generate the adversarial example
+adversarial_image <- generate_adversarial_example(image, pb_ratio, model)
+
+\end{lstlisting}
+
+\subsection{Projected Gradient Descent}
+\begin{lstlisting}[language=R, frame=single]
+library(keras)
+library(tidyverse)
+library(tensorflow)
+library(imager)
+
+#define PGD attack 
+pgdAttack <- function(image, class, model, epsilon, budget, iter) {
+  #loss function
+  loss <- function(image) {
+    K$binary_crossentropy(class, model(image)$predictions)
+  }
+   
+  #perturbation constraint 
+  perturbCon <- function(adv, image, epsilon) {
+    pmin(pmax(adv, image - epsilon), image + epsilon)
+  }
+  
+  #PGD attack
+  for (i in iter) {
+    grad <- K$gradients(loss(image), image)$value #compute the gradient of input image
+    perturb <- step * sign(grad) #compute the perturbation vector
+    
+    image <- image + perturbCon(image + perturb, image) #apply perturbation
+    image <- pmin(pmax(image, 0), 1) #clip pixel values to [0, 1] range
+  }
+
+  advImage <- array_reshape(image * 255, dim(image))
+  advImage <- as.im(advImage)
+  
+  return(advImage)
+}
+\end{lstlisting}
+\subsubsection{Testing}
 
 \subsection{Testing/Correctness/Verification}
+
+\subsubsection{Testing of the Carlini-Wagner algorithim}
+
+ The goal of the script is to see if the generated adverserial image actually fooled the classifier. The entire code can be found in the github repository
+
+The par(mfrow = c(1, 2)) function call sets up a plotting area with one row and two columns, allowing us to display two images side by side. The two plot functions display the original and adversarial images, respectively, with their corresponding titles. This visual comparison helps us confirm that the adversarial image is very similar to the original image, with only subtle differences introduced by the Carlini-Wagner attack algorithm.\\
+
+To test the classifier, the predict() function is used to obtain the model's output probabilities for each class (X or Y) when presented with the original and adversarial images. The array reshape() function reshapes the images into a format suitable for the classifier. The which.max() function returns the index of the maximum probability, which corresponds to the predicted class.\\
+
+Finally, the cat() function to display the predicted classes for the original and adversarial images. If the Carlini-Wagner attack algorithm is successful, the classifier's prediction for the adversarial image should differ from the original image's prediction, despite the visual similarity between the two images. This outcome demonstrates the algorithm's effectiveness in fooling the image classifier while adhering to the specified pixel budget.\\
 
 \newpage\subsection{Runtime Complexity and Walltime}
 
 \newpage\subsection{Performance}
 
 \newpage\subsection{Final Algorithm Selection Justification}
+
+The final algorithm will run through all 5 sub-algorithms (Fast Gradient Sign, Basic Iterative, Deep Fool, Carlini-Wagner, and Projected Gradient) at 10 iterations. For each algorithm a "success index" is made based on the number of successfully fooled images at 10 iterations per image. The algorithm with the highest success index is the one that will be chosen to run through all the iterations.  
+
+\newpage
+\section{References}
+\begin{enumerate}
+    \item ewatson2. (n.d.). Ewatson2/EEL6812\textunderscore DeepFool\textunderscore Project: Class project implementing the deepfool adversarial attack. GitHub. Retrieved April 28, 
+    2023, from https://github.com/ewatson2/EEL6812\textunderscore DeepFool\textunderscore Project 
+
+    \item Moosavi-Dezfooli, S.-M., Fawzi, A., &amp; Frossard, P. (2016, July 4). DeepFool: A simple and accurate method to fool Deep Neural Networks. arXiv.org. Retrieved April 28, 2023, from https://arxiv.org/abs/1511.04599
+    
+    \item Morgan, A. (2022, May 2). A review of DeepFool: A simple and accurate method to fool Deep Neural Networks. Medium. Retrieved April 28, 2023, from https://medium.com/machine-intelligence-and-deep-learning-lab/a-review-of-deepfool-a-simple-and-accurate-method-to-fool-deep-neural-networks-b016fba9e48e 
+    
+    \item 
+    
+\end{enumerate}
 
 \end{document}
