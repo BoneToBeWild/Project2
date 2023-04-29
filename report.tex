@@ -544,8 +544,44 @@ To test the classifier, the predict() function is used to obtain the model's out
 Finally, the cat() function to display the predicted classes for the original and adversarial images. If the Carlini-Wagner attack algorithm is successful, the classifier's prediction for the adversarial image should differ from the original image's prediction, despite the visual similarity between the two images. This outcome demonstrates the algorithm's effectiveness in fooling the image classifier while adhering to the specified pixel budget.\\
 
 \newpage\subsection{Runtime Complexity and Walltime}
+\subsubsection{Fast Gradient Sign Method}
+The runtime complexity of FGSM depends on the length of the input images and the number of iterations used to generate the adversarial images. It is expressed in big O notation as $O(length * iterations)$. FGSM uses very simple mathematical functions making its runtime complexity very low. \\ 
+
+The walltime of FGSM in R is very low due to the use of simple mathmatical operations. However, it does depends on the number and size of the images, the iterations it performs, and the hardware specs of the machine. In general, it takes a few seconds to complete the task\\ 
+
+\subsubsection{Basic Iterative Method}
+The runtime complexity of BIM is very similar to FGSM expressed as $O(length * iterations)$. However, because BIM uses multiple iterations of FGSM, complexity increases much faster then FGSM as number of iterations increases. It is much more expensive comparing to FGSM. \\
+
+The walltime of BIM is much longer and more sensitively effected by the hardware of machine than FGSM. With similar iterations, the BIM will take much longer to perform, generally taking a minute or two. \\
+
+\subsubsection{Deep Fool}
+The runtime complexity of Deep Fool is generally more complex than both FGSM and BIM. It depends on the length and dimension of the images, number of classes, and the number of iterations with big O as $O(dimension^3 * class * iteration)$. With dimension cubed, the complexity increases cubicle as well making it very complex and take a lot of computational power.\\
+
+The walltime of Deep Fool even with low image dimension still takes longer to run than FGSM because it requires the computer to calculate the gradient which differs from image to image. machine to machine. It takes a much longer time than FGSM and BIM to run, with our 30 images it would take a few minutes to process them all.\\
+
+\subsubsection{Carlini-Wagner attack}
+The runtime complexity of CW attack is generally more complex than FGSM and BIM as its big O notation is $O(dimension * iterations * log(iterations))$ where dimension is the size of the images and steps. The complexity varies linearly but is still more complex than FGSM and BIM but can be much less complex than Deep Fool method\\
+
+The walltime of CW attack takes similar time as deep fool as it requires calculating an optimization variable which takes a great amount of computation power. There are a few ways to make CW attack run faster but that heavily depends on the hardware capabilities. It generally take a few minutes to run for our images. \\
+
+\subsubsection{Projected Gradient Descent}
+The runtime complexity of PGD is somewhat similar to CW attack and BIM with big O notation of $O(iterations * step size * class * dimension)$ where step size can be defined with a small number and class depends on the model. Because of its more complex calculations and dependence on the model, it needs quite high computations.\\
+
+The walltime of PGD is dependent on the iterations and dimension of the images but is also determined by the complexity of the model that it is attacking. In general it takes less time to run then Deep Fool and CW attack with a minute or two to run the attack.\\
+
 
 \newpage\subsection{Performance}
+The performance of each method can vary a lot based on different factors such as the number of iterations we set it to and if it works with the model well or not. Some methods takes in our set up better than other even considering their complexity. \\
+
+In general, FGSM is fast and simple, however it is not as effective as the other algorithms with low iterations.\\ 
+
+BIM is a similar but stronger version of FGSM, it uses more iterations than FGSM and builds upon it. However, it does take a bit more computation but more effective than FGSM.\\ 
+
+Deep Fool works very differently than the other algorithms and it takes the longest to perform but yield strong results.\\ 
+
+CW attack although not quite as complex as Deep Fool still takes some time to run. It performes quite well with a high success rate.\\ 
+
+PGD is probably the best of all 5 algorithms as it adapts to the model the best and generate adv images with gradient optimization producing a very high success rate even if it takes some time to run. \\
 
 \newpage\subsection{Final Algorithm Selection Justification}
 
